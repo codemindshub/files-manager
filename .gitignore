@@ -58,3 +58,5 @@ replay_pid*
 
 *.properties
 *.env
+*.yaml
+application.yml
