@@ -56,5 +56,5 @@ build/
 hs_err_pid*
 replay_pid*
 
-.properties
-.env
+*.properties
+*.env
