@@ -105,6 +105,62 @@ files-manager/
 | `POSTGRES_DB`           | Database name                     |  
 ---
 
+```mermaid
+erDiagram
+    USER {
+        uuid id PK "Primary Key, Not Null, Unique"
+        varchar_255 email "Not Null, Unique"
+        varchar_255 password "Not Null"
+        boolean is_active "Default: true"
+        datetime created_at
+        datetime updated_at
+    }
+
+    FILE {
+        uuid id PK "Primary Key, Not Null, Unique"
+        varchar name "Not Null"
+        FileType type "Not Null (folder/file)"
+        varchar_100 mime_type "null for folders, required for files"
+        bigint size "null for folders, required for files"
+        varchar_10 file_extension "extracted from filename"
+        boolean is_public "Default: false"
+        boolean is_deleted "Default: false, soft delete"
+        varchar_512 storage_path
+        datetime last_accessed_at
+        datetime created_at "Default: current timestamp"
+        datetime updated_at "Default: current timestamp on update"
+        datetime deleted_at "timestamp when soft deleted"
+        uuid owner_id FK "References user.id"
+        uuid parent_id FK "References file.id, null for root level"
+    }
+
+    FILE_THUMBNAIL {
+        uuid id PK "Primary Key, Not Null, Unique"
+        uuid file_id FK "References file.id"
+        bigint size "Not Null"
+        SizeType size_type "Not Null (small/medium/large)"
+        varchar_255 storage_path "Not Null, storage location"
+        varchar_100 mime_type "Not Null, Default: image/jpeg"
+        datetime created_at "Default: current timestamp"
+    }
+
+    FILETYPE_ENUM {
+        string folder
+        string file
+    }
+
+    SIZETYPE_ENUM {
+        string small
+        string medium
+        string large
+    }
+
+    USER ||--o{ FILE : "owns (owner_id)"
+    FILE ||--o{ FILE_THUMBNAIL : "has thumbnails"
+    FILE ||--o{ FILE : "parent/child (parent_id)"
+    FILE }o--|| FILETYPE_ENUM : "type"
+    FILE_THUMBNAIL }o--|| SIZETYPE_ENUM : "size_type"
+```
 ## **📜 License**
 MIT © 2024 CodeMinds
 
