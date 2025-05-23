@@ -105,6 +105,7 @@ files-manager/
 | `POSTGRES_DB`           | Database name                     |  
 ---
 
+## **ERD (mermaid visualisation)**
 ```mermaid
 erDiagram
     USER {
